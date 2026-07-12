@@ -98,19 +98,13 @@ local function on_button_click_followme(event)
   local player = get_event_player(event)
   if player
   then
-    local group = find_spidertrons(player)[event.element.tags.group_name]
-    if group then
-      for _, spidertron in ipairs(group)
-      do
-        if event.control
-        then
-          spidertron.autopilot_destination = player.character.position
-          if remote.interfaces["SpidertronEnhancementsInternal-pf"] and remote.interfaces["SpidertronEnhancementsInternal-pf"]["use-remote"] then
-            remote.call("SpidertronEnhancementsInternal-pf", "use-remote", spidertron, player.character.position)
-          end
-        else
-          spidertron.follow_target = player.character
-        end
+    for _, spidertron in ipairs(find_spidertrons(player)[event.element.tags.group_name])
+    do
+      if event.control
+      then
+        spidertron.autopilot_destination = player.character.position
+      else
+        spidertron.follow_target = player.character
       end
     end
   end
@@ -120,12 +114,9 @@ local function on_button_click_give_remote(event)
   local player = get_event_player(event)
   if player and player.is_cursor_empty()
   then
-    local group = find_spidertrons(player)[event.element.tags.group_name]
-    if group then
-      local cursor = player.cursor_stack
-      cursor.set_stack({name="spidertron-remote"})
-      player.spidertron_remote_selection = group
-    end
+    local cursor = player.cursor_stack
+    cursor.set_stack({name="spidertron-remote"})
+    player.spidertron_remote_selection = find_spidertrons(player)[event.element.tags.group_name]
   end
 end
 
@@ -146,25 +137,22 @@ local function on_button_click_go_home(event)
     else -- go home
       local home_position = storage.spidertron_manager_data.home_position[group_name]
       if home_position then
-        local group = find_spidertrons(player)[group_name]
-        if group then
-          -- Check if SpidertronEnhancements is installed and has the pathfinding interface
-          if remote.interfaces["SpidertronEnhancementsInternal-pf"] and remote.interfaces["SpidertronEnhancementsInternal-pf"]["use-remote"] then
-            -- Use smart pathfinding from SpidertronEnhancements
-            for _, spidertron in ipairs(group) do
-              if spidertron.follow_target then
-                spidertron.follow_target = nil
-              end
-              
-              -- Set destination immediately for feedback and vanilla movement
-              spidertron.autopilot_destination = home_position
-              remote.call("SpidertronEnhancementsInternal-pf", "use-remote", spidertron, home_position)
-            end
-          else
-            -- Fall back to vanilla pathfinding
-            for _, spidertron in ipairs(group) do
-              spidertron.autopilot_destination = home_position
-            end
+                -- Check if SpidertronEnhancements is installed and has the pathfinding interface
+        if remote.interfaces["SpidertronEnhancementsInternal-pf"] and remote.interfaces["SpidertronEnhancementsInternal-pf"]["use-remote"] then
+          -- Use smart pathfinding from SpidertronEnhancements
+          for _, spidertron in ipairs(find_spidertrons(player)[group_name]) do
+            if spidertron.follow_target then
+            spidertron.follow_target = nil
+          end
+          
+          -- Clear current destination by setting to nil
+          spidertron.autopilot_destination = nil
+          remote.call("SpidertronEnhancementsInternal-pf", "use-remote", spidertron, home_position)
+          end
+        else
+          -- Fall back to vanilla pathfinding
+          for _, spidertron in ipairs(find_spidertrons(player)[group_name]) do
+            spidertron.autopilot_destination = home_position
           end
         end
       end
@@ -176,13 +164,11 @@ local function on_button_click_view(event)
   local player = get_event_player(event)
   if player
   then
-    local group = find_spidertrons(player)[event.element.tags.group_name]
-    if group and group[1] then
-      player.set_controller{
-        type = defines.controllers.remote,
-        position = group[1].position
-      }
-    end
+    local spidertron = find_spidertrons(player)[event.element.tags.group_name][1]
+    player.set_controller{
+      type = defines.controllers.remote,
+      position = spidertron.position
+    }
   end
 end
 
@@ -191,16 +177,13 @@ local function on_button_click_settings(event)
   if player
   then
     local group_name = event.element.tags.group_name
-    local group = find_spidertrons(player)[group_name]
-    if group and group[1] then
-      storage.spidertron_manager_data.settings_source_spidertron = group[1]
-      player.set_controller{
-        type = defines.controllers.remote,
-        position = storage.spidertron_manager_data.settings_source_spidertron.position
-      }
-      player.opened = storage.spidertron_manager_data.settings_source_spidertron
-      storage.spidertron_manager_data.selection_target_group = group_name
-    end
+    storage.spidertron_manager_data.settings_source_spidertron = find_spidertrons(player)[group_name][1]
+    player.set_controller{
+      type = defines.controllers.remote,
+      position = storage.spidertron_manager_data.settings_source_spidertron.position
+    }
+    player.opened = storage.spidertron_manager_data.settings_source_spidertron
+    storage.spidertron_manager_data.selection_target_group = group_name
   end
 end
 
