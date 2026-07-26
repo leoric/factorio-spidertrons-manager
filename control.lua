@@ -216,6 +216,8 @@ end
 local function on_surface_changed(event)
   local player = get_event_player(event)
   if player.opened then player.opened = nil end
+  local stale_gui = player.gui.screen.spidertron_manager_gui
+  if stale_gui and stale_gui.valid then stale_gui.destroy() end
   if set_shortcut_availability(event) and storage.window_is_opened
   then
     open_spidertron_gui(player)
