@@ -61,7 +61,7 @@ local function open_spidertron_gui(player)
       sp_table.add{ type = "label", caption = spidertron_name(sp_leader) }
       sp_table.add{ type = "label", caption = #spidertrons }
       local button_flow = sp_table.add{ type = "flow", direction = "horizontal" }
-      if player.surface and player.character.surface and player.surface == player.character.surface
+      if player.character and player.character.surface and player.surface == player.character.surface
       then
         add_sprite_button(button_flow, group_name .. "_sm_follow_button", {"sm_gui.follow_me_tooltip"}, "slot_button", "utility/player_force_icon", button_tags)
       end
