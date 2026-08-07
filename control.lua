@@ -67,7 +67,7 @@ local function open_spidertron_gui(player)
       end
       add_sprite_button(button_flow, group_name .. "_sm_give_remote_button", {"sm_gui.give_remote_tooltip"}, "slot_button", "shortcut/give-spidertron-remote", button_tags)
       add_sprite_button(button_flow, group_name .. "_sm_go_home_button"    , {"sm_gui.go_home_tooltip"}    , "slot_button", "utility/shoot_cursor_green"     , button_tags)
-      add_sprite_button(button_flow, group_name .. "_sm_sview_button"      , {"sm_gui.view_tooltip"}       , "slot_button", "open_spidertron_view"           , button_tags)
+      add_sprite_button(button_flow, group_name .. "_sm_view_button"       , {"sm_gui.view_tooltip"}       , "slot_button", "open_spidertron_view"           , button_tags)
       add_sprite_button(button_flow, group_name .. "_sm_settings_button"   , {"sm_gui.settings_tooltip"}   , "slot_button", "open_spidertron_settings"       , button_tags)
   end
   storage.window_is_opened = true
